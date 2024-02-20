@@ -11,11 +11,15 @@ class CustomUserAdmin(UserAdmin):
             "Profile",
             {
                 "fields": (
+                    "avatar",
                     "username",
                     "password",
                     "name",
                     "email",
-                    "is_host"
+                    "is_host",
+                    "gender",
+                    "language",
+                    "currency",
                 ),
             },
         ),
@@ -27,9 +31,9 @@ class CustomUserAdmin(UserAdmin):
                     "is_staff",
                     "is_superuser",
                     "groups",
-                    "user_permissions"
+                    "user_permissions",
                 ),
-                "classes": ("collapse",)
+                "classes": ("collapse",),
             },
         ),
         (
@@ -37,11 +41,16 @@ class CustomUserAdmin(UserAdmin):
             {
                 "fields": (
                     "last_login",
-                    "date_joined"
+                    "date_joined",
                 ),
-                "classes": ("collapse",)
-            }
-        )
+                "classes": ("collapse",),
+            },
+        ),
     )
 
-    list_display = ("username", "email", "name", "is_host")
+    list_display = (
+        "username",
+        "email",
+        "name",
+        "is_host",
+    )
