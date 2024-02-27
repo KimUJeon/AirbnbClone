@@ -42,9 +42,11 @@ class Room(CommonModel):
     owner = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,
+        related_name="rooms",
     )
     amenities = models.ManyToManyField(
         "rooms.Amenity",
+        related_name="rooms",
     )
     category = models.ForeignKey(
         "categories.Category",
