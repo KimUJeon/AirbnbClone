@@ -27,9 +27,13 @@ class RoomAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
-
-    def total_amenities(self, room):
-        return room.amenities.count()
+    search_fields = (
+        # ^변수 사용시 startswith 기능을 함
+        # = 사용시 exact 기능
+        # "name",
+        # "price",
+        "owner__username",
+    )
 
 
 @admin.register(Amenity)
