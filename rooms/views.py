@@ -30,9 +30,7 @@ class AmenityDetail(APIView):
 
     def get(self, request, pk):
         return Response(
-            AmenitySerializer(
-                self.get_object(pk),
-            ).data,
+            AmenitySerializer(self.get_object(pk)).data,
         )
 
     def put(self, request, pk):
