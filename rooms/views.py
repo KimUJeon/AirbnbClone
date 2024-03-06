@@ -7,6 +7,7 @@ from rest_framework.exceptions import (
     ParseError,
     PermissionDenied,
 )
+from django.conf import settings
 from django.db import transaction
 from .models import Amenity, Room
 from categories.models import Category
@@ -165,9 +166,8 @@ class RoomReviews(APIView):
             page = int(page)
         except ValueError:
             page = 1
-        page_size = 5
-        start = (page - 1) * page_size
-        end = start + page_size
+        start = (page - 1) * settings.PAGE_SIZE
+        end = start + settings.PAGE_SIZE
         room = self.get_object(pk)
         serializer = ReviewSerializer(
             room.reviews.all()[start:end],
@@ -189,12 +189,16 @@ class RoomAmenities(APIView):
             page = int(page)
         except ValueError:
             page = 1
-        page_size = 3
-        start = (page - 1) * page_size
-        end = start + page_size
+        start = (page - 1) * settings.PAGE_SIZE
+        end = start + settings.PAGE_SIZE
         room = self.get_object(pk)
         serializer = AmenitySerializer(
             room.amenities.all()[start:end],
             many=True,
         )
         return Response(serializer.data)
+
+
+class RoomPhotos(APIView):
+    def post(self, request, pk):
+        pass
