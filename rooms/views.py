@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, NotAuthenticated, ParseError
+from django.db import transaction
 from .models import Amenity, Room
 from categories.models import Category
 from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
@@ -74,23 +75,21 @@ class Rooms(APIView):
                         raise ParseError("The category kind should be rooms")
                 except Category.DoesNotExist:
                     raise ParseError("Category not found.")
-                room = serializer.save(
-                    owner=request.user,
-                    category=category,
-                )
-                amenities = request.data.get("amenities")
-                for amenity_pk in amenities:
-                    try:
-                        amenity = Amenity.objects.get(pk=amenity_pk)
-                        room.amenities.add(amenity)
+                try:
+                    with transaction.atomic():
+                        room = serializer.save(
+                            owner=request.user,
+                            category=category,
+                        )
+                        amenities = request.data.get("amenities")
+                        for amenity_pk in amenities:
+                            amenity = Amenity.objects.get(pk=amenity_pk)
+                            room.amenities.add(amenity)
 
-                    except Amenity.DoesNotExist:
-                        # room.delete()로 방을 없애고 raise 하는 방법도 있음(에러가 발생했기 때문)
-                        # pass 도 하나의 방법임
-                        raise ParseError(f"Amenity with id:{amenity_pk} is not found")
-
-                serializer = RoomDetailSerializer(room)
-                return Response(serializer.data)
+                        serializer = RoomDetailSerializer(room)
+                        return Response(serializer.data)
+                except Exception:
+                    raise ParseError("Amenity not found")
             else:
                 return Response(serializer.errors)
         else:
