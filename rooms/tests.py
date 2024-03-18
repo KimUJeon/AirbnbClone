@@ -1,5 +1,6 @@
 from rest_framework.test import APITestCase
 from . import models
+from users.models import User
 
 
 class TestAmenities(APITestCase):
@@ -127,3 +128,26 @@ class TestAmenity(APITestCase):
     def test_delete_amenity(self):
         response = self.client.delete("/api/v1/rooms/amenities/1")
         self.assertEqual(response.status_code, 204)
+
+
+class TestRooms(APITestCase):
+
+    def setUp(self):
+        user = User.objects.create(
+            username="test",
+        )
+        user.set_password("123")
+        user.save()
+
+        self.user = user
+
+    def test_create_room(self):
+        # 403 표기가 된다면 권한 없음이 잘 작동중임
+        response = self.client.post("/api/v1/rooms/")
+        self.assertEqual(response.status_code, 403)
+        # force login 방식은 인증 방법 테스트 할때만 이용하는것이 좋음
+        # 실제 데이터를 생성할때는 login을 통해 하는것이 좋음
+        self.client.force_login(self.user)
+
+        response = self.client.post("/api/v1/rooms/")
+        print(response.json())
