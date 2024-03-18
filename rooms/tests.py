@@ -82,3 +82,48 @@ class TestAmenities(APITestCase):
             "name",
             data,
         )
+
+
+class TestAmenity(APITestCase):
+    NAME = "Test Amenity"
+    DESC = "Test Description"
+
+    def setUp(self):
+        models.Amenity.objects.create(
+            name=self.NAME,
+            description=self.DESC,
+        )
+
+    def test_amenity_not_found(self):
+        response = self.client.get("/api/v1/rooms/amenities/2")
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_amenity(self):
+        response = self.client.get("/api/v1/rooms/amenities/1")
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertEqual(data["name"], self.NAME)
+        self.assertEqual(data["description"], self.DESC)
+
+    def test_put_amenity(self):
+        response = self.client.put(
+            "/api/v1/rooms/amenities/1",
+            data={
+                "name": "안녕",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+
+        name_over_150 = "1" * 200
+        name_valid_response = self.client.put(
+            "api/v1/rooms/amenities/1",
+            data={
+                "name": name_over_150,
+            },
+        )
+        self.assertEqual(name_valid_response.status_code, 404)
+
+    def test_delete_amenity(self):
+        response = self.client.delete("/api/v1/rooms/amenities/1")
+        self.assertEqual(response.status_code, 204)

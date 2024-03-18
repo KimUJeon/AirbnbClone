@@ -63,7 +63,10 @@ class AmenityDetail(APIView):
                 AmenitySerializer(updated_amenity).data,
             )
         else:
-            return Response(serializer.errors)
+            return Response(
+                serializer.errors,
+                status=HTTP_400_BAD_REQUEST,
+            )
 
     def delete(self, request, pk):
         amenity = self.get_object(pk)
@@ -111,7 +114,10 @@ class Rooms(APIView):
             except Exception:
                 raise ParseError("Amenity not found")
         else:
-            return Response(serializer.errors)
+            return Response(
+                serializer.errors,
+                status=HTTP_400_BAD_REQUEST,
+            )
 
 
 class RoomDetail(APIView):
@@ -147,7 +153,10 @@ class RoomDetail(APIView):
                 RoomDetailSerializer(updated_room).data,
             )
         else:
-            return Response(serializer.errors)
+            return Response(
+                serializer.errors,
+                status=HTTP_400_BAD_REQUEST,
+            )
 
     def delete(self, request, pk):
         room = self.get_object(pk)
@@ -192,7 +201,10 @@ class RoomReviews(APIView):
             serializer = ReviewSerializer(review)
             return Response(serializer.data)
         else:
-            return Response(serializer.errors)
+            return Response(
+                serializer.errors,
+                status=HTTP_400_BAD_REQUEST,
+            )
 
 
 class RoomAmenities(APIView):
@@ -240,7 +252,10 @@ class RoomPhotos(APIView):
             serializer = PhotoSerializer(photo)
             return Response(serializer.data)
         else:
-            return Response(serializer.errors)
+            return Response(
+                serializer.errors,
+                status=HTTP_400_BAD_REQUEST,
+            )
 
 
 class RoomBookings(APIView):
@@ -278,4 +293,7 @@ class RoomBookings(APIView):
             serializer = PublicBookingSerializer(booking)
             return Response(serializer.data)
         else:
-            return Response(serializer.errors)
+            return Response(
+                serializer.errors,
+                status=HTTP_400_BAD_REQUEST,
+            )
