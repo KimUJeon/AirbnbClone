@@ -1,10 +1,25 @@
 import { Outlet } from "react-router-dom";
+import { FaAirbnb } from "react-icons/fa";
+import { HStack, Box, Button } from "@chakra-ui/react";
 
 export default function Root() {
   return (
-    <h1>
-      im root
+    <Box>
+      <HStack
+        justifyContent="space-between"
+        py={"5"}
+        px={"10"}
+        borderBottomWidth={1}
+      >
+        <Box color="red.500">
+          <FaAirbnb size={"48"} />
+        </Box>
+        <HStack spacing={2}>
+          <Button> Log In </Button>
+          <Button> Sign Up</Button>
+        </HStack>
+      </HStack>
       <Outlet />
-    </h1>
+    </Box>
   );
 }
