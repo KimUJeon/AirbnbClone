@@ -34,14 +34,20 @@ export default function Room() {
       <Box>
         <Grid
           gap={"2"}
-          // templateColumns={"6fr 1fr"}
+          templateColumns={"6fr 1fr"}
           justifyContent={"space-between"}
         >
           <Text display={"block"} as={"b"} noOfLines={1} fontSize={"md"}>
             abcdefghijklmnopqrstuvwxyzabcdefghijklmnopasdf
             sdfsdfasdfasfsdafadsfasdfasdfasfs
           </Text>
-          <HStack spacing={1}>
+          <HStack
+            _hover={{
+              color: "red.500",
+            }}
+            alignItems={"center"}
+            spacing={1}
+          >
             <FaStar size={"15"} />
             <Text>5.0</Text>
           </HStack>
