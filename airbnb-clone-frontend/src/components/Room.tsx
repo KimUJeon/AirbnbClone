@@ -45,7 +45,7 @@ export default function Room({
       <Box>
         <Grid
           gap={"2"}
-          templateColumns={"6fr 1fr"}
+          templateColumns={"7fr 1fr"}
           justifyContent={"space-between"}
         >
           <Text display={"block"} as={"b"} noOfLines={1} fontSize={"md"}>
