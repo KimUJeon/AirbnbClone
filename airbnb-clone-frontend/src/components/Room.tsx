@@ -35,7 +35,7 @@ export default function Room({
     <Link to={`/rooms/${pk}`}>
       <VStack alignItems={"flex-start"}>
         <Box overflow={"hidden"} mb={"3"} rounded={"2xl"}>
-          <Image minHeight={"280"} src={imageUrl} />
+          <Image objectFit={"cover"} minHeight={"280"} src={imageUrl} />
           <Button
             variant={"unstyled"}
             position={"absolute"}

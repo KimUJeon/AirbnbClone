@@ -1,23 +1,25 @@
-from rest_framework.views import APIView
+import time
+
+from django.conf import settings
+from django.db import transaction
 from django.utils import timezone
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
-from rest_framework.response import Response
 from rest_framework.exceptions import (
     NotFound,
-    NotAuthenticated,
     ParseError,
     PermissionDenied,
 )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from django.conf import settings
-from django.db import transaction
-from .models import Amenity, Room
-from categories.models import Category
-from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
-from reviews.serializers import ReviewSerializer
-from medias.serializers import PhotoSerializer
+from rest_framework.response import Response
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
+from rest_framework.views import APIView
+
 from bookings.models import Booking
 from bookings.serializers import PublicBookingSerializer, CreateRoomBookingSerializer
+from categories.models import Category
+from medias.serializers import PhotoSerializer
+from reviews.serializers import ReviewSerializer
+from .models import Amenity, Room
+from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
 
 
 class Amenities(APIView):
@@ -130,6 +132,7 @@ class RoomDetail(APIView):
             raise NotFound
 
     def get(self, request, pk):
+        time.sleep(2)
         room = self.get_object(pk)
         serializer = RoomDetailSerializer(
             room,
