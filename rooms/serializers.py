@@ -1,10 +1,10 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from .models import Amenity, Room
-from users.serializers import TinyUserSerializer
-from reviews.serializers import ReviewSerializer
+
 from categories.serializers import CategorySerializer
 from medias.serializers import PhotoSerializer
+from users.serializers import TinyUserSerializer
 from wishlists.models import Wishlist
+from .models import Amenity, Room
 
 
 class AmenitySerializer(ModelSerializer):
@@ -46,7 +46,11 @@ class RoomDetailSerializer(ModelSerializer):
 
     def get_is_liked(self, room):
         request = self.context["request"]
-        return Wishlist.objects.filter(user=request.user, rooms__pk=room.pk).exists()
+        if request.user.is_authenticated:
+            return Wishlist.objects.filter(
+                user=request.user, rooms__pk=room.pk
+            ).exists()
+        return False
 
 
 class RoomListSerializer(ModelSerializer):
