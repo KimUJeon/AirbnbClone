@@ -132,7 +132,7 @@ class RoomDetail(APIView):
             raise NotFound
 
     def get(self, request, pk):
-        time.sleep(2)
+        time.sleep(0.5)
         room = self.get_object(pk)
         serializer = RoomDetailSerializer(
             room,

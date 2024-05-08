@@ -1,21 +1,32 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getRoom } from "../api";
-import { IRoomDetail } from "../type";
+import { getRoom, getRoomReviews } from "../api";
+import { IReivew, IRoomDetail } from "../type";
 import {
+  Avatar,
   Box,
   Grid,
   GridItem,
   Heading,
+  HStack,
   Image,
   Skeleton,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
+import { FaStar } from "react-icons/fa";
 
 export default function RoomDetail() {
   const { roomPk } = useParams();
   const { isLoading, data } = useQuery<IRoomDetail>({
     queryKey: [`rooms`, roomPk],
     queryFn: getRoom,
+  });
+  const { data: reviewsData, isLoading: isReviewsLoading } = useQuery<
+    IReivew[]
+  >({
+    queryKey: [`rooms`, roomPk, `reviews`],
+    queryFn: getRoomReviews,
   });
 
   return (
@@ -56,6 +67,35 @@ export default function RoomDetail() {
           </GridItem>
         ))}
       </Grid>
+      <HStack justifyContent={"space-between"} mt={"10"} width={"40%"}>
+        <VStack alignItems={"flex-start"}>
+          <Skeleton isLoaded={!isLoading} height={"30px"}>
+            <Heading fontSize={"2xl"}>
+              House hosted by {data?.owner.name}
+            </Heading>
+            <HStack justifyContent={"flex-start"} w={"100%"}>
+              <Text>
+                {data?.toilets} toilet{data?.toilets === 1 ? "" : "s"}
+              </Text>
+              <Text> · </Text>
+              <Text>
+                {data?.rooms} room{data?.rooms === 1 ? "" : "s"}
+              </Text>
+            </HStack>
+          </Skeleton>
+        </VStack>
+        <Avatar name={data?.owner.name} size={"xl"} src={data?.owner.avatar} />
+      </HStack>
+      <Box mt={"10"}>
+        <Heading fontSize={"2xl"}>
+          <HStack>
+            <FaStar /> <Text> {data?.rating} </Text>·
+            <Text>
+              {reviewsData?.length} review{reviewsData?.length === 1 ? "" : "s"}
+            </Text>
+          </HStack>
+        </Heading>
+      </Box>
     </Box>
   );
 }

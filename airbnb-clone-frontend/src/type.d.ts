@@ -44,3 +44,8 @@ export interface IRoomDetail extends IRoomList {
   owner: IRoomOwner;
   amenities: IAmenity[];
 }
+
+export interface IReivew {
+  payload: string;
+  rating: number;
+}
