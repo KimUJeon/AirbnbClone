@@ -1,13 +1,14 @@
 import jwt
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import ParseError, NotFound
 from rest_framework.permissions import IsAuthenticated
-from . import serializers
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from . import models
+from . import serializers
 
 
 class Me(APIView):
@@ -125,3 +126,10 @@ class JWTLogin(APIView):
             return Response({"token": token})
         else:
             return Response({"error": "wrong password"})
+
+
+class GithubLogin(APIView):
+    def post(self, request):
+        code = request.data.get("code")
+        print(code)
+        return Response()
