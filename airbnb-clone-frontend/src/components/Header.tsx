@@ -20,6 +20,8 @@ import LoginModal from "./LoginModal";
 import React from "react";
 import SignupModal from "./SignUpModal";
 import useUser from "../lib/useUser";
+import { logOut } from "../api";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header() {
   const { userLoading, isLoggedIn, user } = useUser();
@@ -38,13 +40,15 @@ export default function Header() {
   const logoColor = useColorModeValue("red.500", "red.300");
   const Icon = useColorModeValue(FaMoon, FaSun);
   const toast = useToast();
+  const queryClient = useQueryClient();
   const onLogOut = async () => {
     const toastId = toast({
       title: "Log out...",
       description: "Wait for a moment...",
       status: "loading",
     });
-    // const data = await logOut();
+    await logOut();
+    queryClient.refetchQueries({ queryKey: ["me"] });
     toast.update(toastId, {
       status: "success",
       title: "Logged Out!!",

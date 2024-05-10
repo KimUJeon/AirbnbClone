@@ -6,6 +6,8 @@ export default function useUser() {
   const { isLoading, data, isError } = useQuery<IUser>({
     queryKey: ["me"],
     queryFn: getMe,
+    retry: false,
+    refetchOnWindowFocus: false,
   });
   return {
     userLoading: isLoading,
