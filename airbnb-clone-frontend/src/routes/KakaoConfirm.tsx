@@ -2,6 +2,7 @@ import { Heading, Spinner, Text, useToast, VStack } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { kakaoLogin } from "../api";
 
 export default function KakaoConfirm() {
   const { search } = useLocation();
@@ -12,18 +13,16 @@ export default function KakaoConfirm() {
     const params = new URLSearchParams(search);
     const code = params.get("code");
     if (code) {
-      console.log(code);
-      return;
-      // const status = await kakaoLogin(code);
-      // if (status === 200) {
-      //   toast({
-      //     status: "success",
-      //     title: "Welcome!",
-      //     description: "Happy Happy Happy",
-      //   });
-      //   queryClient.refetchQueries({ queryKey: ["me"] });
-      //   navigate("/");
-      // }
+      const status = await kakaoLogin(code);
+      if (status === 200) {
+        toast({
+          status: "success",
+          title: "Welcome!",
+          description: "Happy Happy Happy",
+        });
+        queryClient.refetchQueries({ queryKey: ["me"] });
+        navigate("/");
+      }
     }
   };
   useEffect(() => {

@@ -28,6 +28,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = env("SECRET_KEY")
 GH_SECRET = env("GH_SECRET")
 GH_CLIENT_SECRET = env("GH_CLIENT_SECRET")
+KAKAO_KEY = env("KAKAO_KEY")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
