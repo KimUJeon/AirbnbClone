@@ -10,6 +10,7 @@ import {
   MenuItem,
   MenuList,
   Stack,
+  ToastId,
   useColorMode,
   useColorModeValue,
   useDisclosure,
@@ -17,11 +18,11 @@ import {
 } from "@chakra-ui/react";
 import { FaAirbnb, FaMoon, FaSun } from "react-icons/fa";
 import LoginModal from "./LoginModal";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import SignupModal from "./SignUpModal";
 import useUser from "../lib/useUser";
 import { logOut } from "../api";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function Header() {
   const { userLoading, isLoggedIn, user } = useUser();
@@ -41,22 +42,31 @@ export default function Header() {
   const Icon = useColorModeValue(FaMoon, FaSun);
   const toast = useToast();
   const queryClient = useQueryClient();
-  const [isLogginOut, setIsLoggingOut] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const toastId = useRef<ToastId>();
+  const mutation = useMutation({
+    mutationFn: logOut,
+    onMutate: () => {
+      toastId.current = toast({
+        title: "Log out",
+        description: "Sad to see you go",
+        status: "loading",
+        position: "bottom-right",
+      });
+    },
+    onSuccess: () => {
+      if (toastId.current) {
+        queryClient.refetchQueries({ queryKey: ["me"] });
+        toast.update(toastId.current, {
+          status: "success",
+          title: "Logged Out!!",
+          description: "See you later",
+        });
+      }
+    },
+  });
   const onLogOut = async () => {
-    setIsLoggingOut(true);
-    const toastId = toast({
-      title: "Log out...",
-      description: "Wait for a moment...",
-      status: "loading",
-    });
-    await logOut();
-    setIsLoggingOut(false);
-    queryClient.refetchQueries({ queryKey: ["me"] });
-    toast.update(toastId, {
-      status: "success",
-      title: "Logged Out!!",
-      description: "See you later",
-    });
+    mutation.mutate();
   };
   return (
     <Stack
