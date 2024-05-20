@@ -89,6 +89,7 @@ export const getAmenities = () =>
 
 export const getCategories = () =>
   instance.get(`categories`).then((response) => response.data);
+
 export const uploadRoom = (variables: IForm) =>
   instance
     .post(`rooms/`, variables, {

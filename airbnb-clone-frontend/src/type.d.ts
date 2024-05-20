@@ -28,6 +28,7 @@ export interface IAmenity {
 }
 
 export interface IRoomDetail extends IRoomList {
+  id: string;
   created_at: string;
   updated_at: string;
   rooms: number;
