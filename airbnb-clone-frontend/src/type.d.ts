@@ -74,3 +74,10 @@ export interface ISignup {
   username: string;
   password: string;
 }
+
+export interface IProtectedPageProps {
+  children: React.ReactNode;
+}
+export interface IHostOnlyPageProps {
+  children: React.ReactNode;
+}
