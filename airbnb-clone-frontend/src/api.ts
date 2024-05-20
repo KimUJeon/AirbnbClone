@@ -1,6 +1,7 @@
 import Cookie from "js-cookie";
 import axios from "axios";
 import { QueryFunctionContext } from "@tanstack/react-query";
+import { ISignup, IUsernameLoginVariables } from "./type";
 
 const instance = axios.create({
   baseURL: "http://127.0.0.1:8000/api/v1/",
@@ -54,17 +55,6 @@ export const kakaoLogin = (code: string) =>
     )
     .then((response) => response.status);
 
-export interface IUsernameLoginVariables {
-  username: string;
-  password: string;
-}
-export interface IUsernameLoginSuccess {
-  ok: string;
-}
-export interface IUsernameLoginError {
-  error: string;
-}
-
 export const usernameLogin = ({
   username,
   password,
@@ -73,6 +63,19 @@ export const usernameLogin = ({
     .post(
       `/users/log-in`,
       { username, password },
+      {
+        headers: {
+          "X-CSRFToken": Cookie.get("csrftoken") || "",
+        },
+      },
+    )
+    .then((response) => response.data);
+
+export const signupUser = ({ email, name, username, password }: ISignup) =>
+  instance
+    .post(
+      `users/signup`,
+      { name, username, email, password },
       {
         headers: {
           "X-CSRFToken": Cookie.get("csrftoken") || "",
