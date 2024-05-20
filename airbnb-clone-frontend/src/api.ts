@@ -1,7 +1,7 @@
 import Cookie from "js-cookie";
 import axios from "axios";
 import { QueryFunctionContext } from "@tanstack/react-query";
-import { ISignup, IUsernameLoginVariables } from "./type";
+import { IForm, ISignup, IUsernameLoginVariables } from "./type";
 
 const instance = axios.create({
   baseURL: "http://127.0.0.1:8000/api/v1/",
@@ -89,3 +89,11 @@ export const getAmenities = () =>
 
 export const getCategories = () =>
   instance.get(`categories`).then((response) => response.data);
+export const uploadRoom = (variables: IForm) =>
+  instance
+    .post(`rooms/`, variables, {
+      headers: {
+        "X-CSRFToken": Cookie.get("csrftoken") || "",
+      },
+    })
+    .then((response) => response.data);
