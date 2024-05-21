@@ -252,7 +252,9 @@ class SignUp(APIView):
 
             login(request, user)
 
-            return Response({"Success": "Created User Info"}, status=status.HTTP_200_OK)
+            return Response(
+                {"Success": "Created User Info"}, status=status.HTTP_200_OK
+            )
         except Exception as e:
             return Response(
                 {"Error": f"Occurred some errors {e}"},

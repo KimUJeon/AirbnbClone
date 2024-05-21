@@ -3,6 +3,7 @@ import time
 from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
+from rest_framework import status
 from rest_framework.exceptions import (
     NotFound,
     ParseError,
@@ -10,7 +11,6 @@ from rest_framework.exceptions import (
 )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from bookings.models import Booking
@@ -36,7 +36,7 @@ class Amenities(APIView):
         else:
             return Response(
                 serializer.errors,
-                status=HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 
@@ -67,13 +67,13 @@ class AmenityDetail(APIView):
         else:
             return Response(
                 serializer.errors,
-                status=HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
     def delete(self, request, pk):
         amenity = self.get_object(pk)
         amenity.delete()
-        return Response(status=HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class Rooms(APIView):
@@ -120,7 +120,7 @@ class Rooms(APIView):
         else:
             return Response(
                 serializer.errors,
-                status=HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 
@@ -160,7 +160,7 @@ class RoomDetail(APIView):
         else:
             return Response(
                 serializer.errors,
-                status=HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
     def delete(self, request, pk):
@@ -169,7 +169,7 @@ class RoomDetail(APIView):
             raise PermissionDenied
 
         room.delete()
-        return Response(status=HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class RoomReviews(APIView):
@@ -208,7 +208,7 @@ class RoomReviews(APIView):
         else:
             return Response(
                 serializer.errors,
-                status=HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 
@@ -259,7 +259,7 @@ class RoomPhotos(APIView):
         else:
             return Response(
                 serializer.errors,
-                status=HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 
@@ -288,7 +288,10 @@ class RoomBookings(APIView):
 
     def post(self, request, pk):
         room = self.get_object(pk)
-        serializer = CreateRoomBookingSerializer(data=request.data)
+        serializer = CreateRoomBookingSerializer(
+            data=request.data,
+            context={"room": room},
+        )
         if serializer.is_valid():
             booking = serializer.save(
                 room=room,
@@ -300,5 +303,28 @@ class RoomBookings(APIView):
         else:
             return Response(
                 serializer.errors,
-                status=HTTP_400_BAD_REQUEST,
+                status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class RoomBookingCheck(APIView):
+    def get_object(self, pk):
+        try:
+            return Room.objects.get(pk=pk)
+        except:
+            raise NotFound
+
+    def get(self, request, pk):
+        room = self.get_object(pk)
+        check_out = request.query_params.get("check_out")
+        check_in = request.query_params.get("check_in")
+        exists = Booking.objects.filter(
+            room=room,
+            check_in__lte=check_out,
+            check_out__gte=check_in,
+        ).exists()
+
+        if exists:
+            return Response({"ok": False}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"ok": True}, status=status.HTTP_200_OK)

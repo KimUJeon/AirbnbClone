@@ -1,7 +1,7 @@
-from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
-from rest_framework.status import HTTP_204_NO_CONTENT
+from rest_framework.views import APIView
+
 from .models import Perk
 from .serializers import PerkSerializer
 
@@ -52,4 +52,4 @@ class PerkDetail(APIView):
     def delete(self, request, pk):
         perk = self.get_object(pk)
         perk.delete()
-        return Response(status=HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)

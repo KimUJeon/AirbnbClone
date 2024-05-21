@@ -1,8 +1,8 @@
-from rest_framework.views import APIView
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_200_OK
 from rest_framework.exceptions import NotFound
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from rooms.models import Room
 from .models import Wishlist
 from .serializers import WishlistSerializer
@@ -52,7 +52,7 @@ class WishlistDetail(APIView):
     def delete(self, request, pk):
         wishlist = self.get_object(pk, request.user)
         wishlist.delete()
-        return Response(status=HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def put(self, request, pk):
         wishlist = self.get_object(pk, request.user)
@@ -91,4 +91,4 @@ class WishlistToggle(APIView):
         else:
             wishlist.rooms.add(room)
 
-        return Response(status=HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
