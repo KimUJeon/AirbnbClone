@@ -7,4 +7,4 @@
 /dataSources/
 /dataSources.local.xml
 # 필요없는 파일/경로 무시
-.idea/
+.idea
