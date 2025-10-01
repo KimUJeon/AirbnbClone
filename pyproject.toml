@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "01-airbnb"
+version = "0.1.0"
+description = ""
+authors = ["KimUJeon <kinfe_411@naver.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.2.5"
+beautifulsoup4 = "^4.13.5"
+black = "^25.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
