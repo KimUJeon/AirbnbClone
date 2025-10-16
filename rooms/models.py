@@ -13,6 +13,11 @@ class Room(CommonModel):
         PRIVATE_ROOM = ("private", "Private Room")
         SHARED_ROOM = ("shared", "Shared Room")
 
+    name = models.CharField(
+        max_length=100,
+        default="",
+    )
+
     country = models.CharField(
         max_length=50,
         default="대한민국",
@@ -42,6 +47,9 @@ class Room(CommonModel):
     )
     amenities = models.ManyToManyField("rooms.Amenity")
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class Amenity(CommonModel):
     """어메니티 정의"""
@@ -51,6 +59,13 @@ class Amenity(CommonModel):
     )
     description = models.CharField(
         max_length=150,
+        null=True,
         blank=True,
-        default="",
     )
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        # 복수형 이름을 지정가능
+        verbose_name_plural = "Amenities"
