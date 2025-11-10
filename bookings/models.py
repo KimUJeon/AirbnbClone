@@ -46,4 +46,4 @@ class Booking(CommonModel):
     guests = models.PositiveIntegerField()
 
     def __str__(self) -> str:
-        return f"{self.kind} 을 {self.user} 가 한 예약"
+        return f"{self.kind.title()} 을 {self.user} 가 한 예약"

@@ -17,6 +17,7 @@ class Wishlist(CommonModel):
         null=True,
         blank=True,
     )
+    # 위시리스트는 유저 한명만 소지 가능함 1:1 매칭
     user = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,
